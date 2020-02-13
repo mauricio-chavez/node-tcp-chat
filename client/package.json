@@ -1,0 +1,12 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TCP Chat Client",
+  "main": "index.js",
+  "author": "Mauricio Chávez Olea <mauricio@eterna.digital>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index"
+  }
+}
