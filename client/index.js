@@ -7,9 +7,10 @@ const rl = readline.createInterface({
 })
 
 const client = new Socket()
+let registered = false
 
 client.connect(8000, () => {
-  consoleOut('Connected -> localhost:8000')
+  consoleOut('Type your name')
 })
 
 function consoleOut(message) {
@@ -20,11 +21,26 @@ function consoleOut(message) {
 }
 
 rl.on('line', input => {
-  client.write(input)
+  if (!registered) {
+    registered = true
+    message = JSON.stringify({
+      type: 'register',
+      data: input
+    })
+    client.write(message)
+    consoleOut(`Hello, ${input}`)
+  } else {
+    message = JSON.stringify({
+      type: 'message',
+      data: input
+    })
+    client.write(message)
+    consoleOut(`You said: "${input}"`)
+  }
 })
 
 client.on('data', function(data) {
-  consoleOut('Received: ' + data)
+  consoleOut(data.toString())
 })
 
 client.on('error', error => {
@@ -34,6 +50,7 @@ client.on('error', error => {
 rl.on('close', () => {
   console.log('Good bye!')
   client.destroy()
+  return process.exit(0)
 })
 
 client.on('close', function() {
